@@ -12,17 +12,7 @@ API_VERSION = 'v3'
 def get_apikey_service(api_key: str):
 	return build(API_SERVICE_NAME, API_VERSION, developerKey=api_key)
 
-def youtube_search(options: Union[dict, Namespace], api_key: str):
-	youtube = get_apikey_service(api_key)
-	print(type(options))
-	search_args = dict(part='id,snippet', order='date')
-
-	if type(options) is Namespace:
-		options = vars(options)
-	search_args.update(options)
-
-	search_response = youtube.search().list(**search_args).execute()
-
+def parse_response(search_response: dict):
 	videos = []
 	channels = []
 	playlists = []
@@ -49,6 +39,20 @@ def youtube_search(options: Union[dict, Namespace], api_key: str):
 		'channels': channels,
 		'playlists': playlists
 	}
+
+def youtube_search(options: Union[dict, Namespace], api_key: str):
+	youtube = get_apikey_service(api_key)
+	print(type(options))
+	search_args = dict(part='id,snippet', order='date')
+
+	if type(options) is Namespace:
+		options = vars(options)
+	search_args.update(options)
+
+	search_response = youtube.search().list(**search_args).execute()
+
+	res = parse_response(search_response)
+	return res
 
 def get_channel_videos(api_key: str, channel_id: int, max_results: int = 20):
 	args = {"channelId": channel_id, "maxResults": max_results}

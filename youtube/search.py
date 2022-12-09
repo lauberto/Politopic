@@ -55,15 +55,20 @@ def get_channel_videos(api_key: str, channel_id: int, max_results: int = 20):
 	res = youtube_search(args, api_key)
 	return res
 
-if __name__ == "__main__":
+def get_channel_videos_cli():
 	parser = ArgumentParser()
 	parser.add_argument("--channelId", help="Channel ID", required=True)
 	parser.add_argument("--maxResults", help="Max no. results to show.", default=20)
 
 	args = parser.parse_args()
-
+	api_key = getpass("Google API key: ")
+	
 	try:
-		res = youtube_search(args)
+		res = youtube_search(args, api_key)
 		print(res)
-	except HttpError as e:
-		print(f'An HTTP error {e.resp.status} occurred:\n{e.content}')
+	except HttpError as err:
+		print(f'An HTTP error {err.resp.status} occurred:\n{err.content}')
+
+if __name__ == "__main__":
+	get_channel_videos_cli()
+	

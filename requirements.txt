@@ -1,0 +1,5 @@
+stanza
+whisper
+pytube
+pandas
+nltk
